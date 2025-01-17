@@ -14,7 +14,7 @@ const tripRoutes = require('./routes/tripRoutes');
 require('dotenv').config();
 const app = express();
 
-// Connect to the database
+// Connect to the databas
 connectDb();
 
 const corsOptions = {

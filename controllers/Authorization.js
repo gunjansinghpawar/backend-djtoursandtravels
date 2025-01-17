@@ -13,6 +13,7 @@ const sendErrorResponse = (res, message, statusCode = 500) => {
 };
 
 // Create user
+// Create user
 exports.createUser = async (req, res) => {
     const { name, email, phoneNo, password, confirmedPassword } = req.body;
 
@@ -22,11 +23,21 @@ exports.createUser = async (req, res) => {
             return sendErrorResponse(res, 'Passwords do not match.', 400);
         }
 
-        // Check for existing user
+        const existingVerifiedUser = await VerifiedUser.findOne({ email });
         const existingUser = await User.findOne({ email });
+
         if (existingUser) {
-            return sendErrorResponse(res, 'Email already exists.', 400);
+            if (existingUser.isVerified === false) {
+                // Delete the unverified user
+                await User.deleteOne({ email });
+            } 
         }
+        if(existingVerifiedUser)
+        {
+            return sendErrorResponse(res, 'Email is already registered.', 400);
+        }
+        
+
 
         // Hash password and create new user
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,6 +53,7 @@ exports.createUser = async (req, res) => {
         sendErrorResponse(res, 'An error occurred while creating the user.');
     }
 };
+
 
 // Get user details
 exports.getUserDetails = [
