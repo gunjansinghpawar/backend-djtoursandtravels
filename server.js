@@ -18,7 +18,7 @@ const app = express();
 connectDb();
 
 const corsOptions = {
-  origin: 'http://localhost:4000',
+  origin: process.env.FRONTEND_HOST,
   credentials: true,
 };
 
